@@ -1,12 +1,17 @@
 @import "tailwindcss";
-@plugin "daisyui";
+
+@plugin "daisyui" {
+  themes: all;
+}
 
 body {
   font-family: system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Print styles — essay assessment page */
 @media print {
+
   nav,
   footer,
   .print\:hidden {

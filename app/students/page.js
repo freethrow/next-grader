@@ -1,19 +1,13 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import PageHeader from '@/components/layout/PageHeader'
 import StudentList from '@/components/students/StudentList'
 import StudentSearch from '@/components/students/StudentSearch'
-import Modal from '@/components/ui/Modal'
-import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
-import Select from '@/components/ui/Select'
 import { LEVELS } from '@/data/levels'
 
 const LEVEL_OPTIONS = Object.entries(LEVELS).map(([value, { label }]) => ({ value, label }))
 
 export default function StudentsPage() {
-  const router = useRouter()
   const [students, setStudents] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -63,7 +57,7 @@ export default function StudentsPage() {
         title="Students"
         subtitle={`${students.length} student${students.length !== 1 ? 's' : ''}`}
         action={
-          <Button onClick={() => setShowAdd(true)}>+ Add Student</Button>
+          <button className="btn btn-primary btn-sm" onClick={() => setShowAdd(true)}>+ Add Student</button>
         }
       />
 
@@ -79,18 +73,40 @@ export default function StudentsPage() {
         <StudentList students={students} />
       )}
 
-      <Modal open={showAdd} onClose={() => setShowAdd(false)} title="Add Student">
-        <form onSubmit={handleAdd} className="space-y-4">
-          <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required placeholder="Student's full name" />
-          <Input label="Email (optional)" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="student@example.com" />
-          <Input label="Notes (optional)" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Preparing for June exam…" />
-          <Select label="Target Level" options={LEVEL_OPTIONS} value={form.level} onChange={(e) => setForm({ ...form, level: e.target.value })} />
-          <div className="flex gap-2 justify-end pt-2">
-            <Button type="button" variant="ghost" onClick={() => setShowAdd(false)}>Cancel</Button>
-            <Button type="submit" loading={saving}>Add Student</Button>
-          </div>
-        </form>
-      </Modal>
+      <dialog className={`modal ${showAdd ? 'modal-open' : ''}`}>
+        <div className="modal-box max-w-md">
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" type="button" onClick={() => setShowAdd(false)}>✕</button>
+          <h3 className="font-bold text-lg mb-4 pr-8">Add Student</h3>
+          <form onSubmit={handleAdd} className="space-y-4">
+            <div className="form-control w-full">
+              <label className="label"><span className="label-text font-medium">Name</span></label>
+              <input type="text" className="input input-bordered w-full" placeholder="Student's full name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            </div>
+            <div className="form-control w-full">
+              <label className="label"><span className="label-text font-medium">Email (optional)</span></label>
+              <input type="email" className="input input-bordered w-full" placeholder="student@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            </div>
+            <div className="form-control w-full">
+              <label className="label"><span className="label-text font-medium">Notes (optional)</span></label>
+              <input type="text" className="input input-bordered w-full" placeholder="Preparing for June exam…" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+            </div>
+            <div className="form-control w-full">
+              <label className="label"><span className="label-text font-medium">Target Level</span></label>
+              <select className="select select-bordered w-full" value={form.level} onChange={(e) => setForm({ ...form, level: e.target.value })}>
+                {LEVEL_OPTIONS.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
+              </select>
+            </div>
+            <div className="flex gap-2 justify-end pt-2">
+              <button type="button" className="btn btn-ghost" onClick={() => setShowAdd(false)}>Cancel</button>
+              <button type="submit" className="btn btn-primary" disabled={saving}>
+                {saving && <span className="loading loading-spinner loading-sm" />}
+                Add Student
+              </button>
+            </div>
+          </form>
+        </div>
+        <div className="modal-backdrop" onClick={() => setShowAdd(false)} />
+      </dialog>
     </div>
   )
 }

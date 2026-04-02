@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NextGrader — Color Palette</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #F7F5F2;
+      color: #2B2D2F;
+      padding: 48px 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2E7D8C;
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #7A7A7A;
+      margin-bottom: 48px;
+    }
+
+    section {
+      margin-bottom: 44px;
+    }
+
+    h2 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #9A9A9A;
+      margin-bottom: 16px;
+    }
+
+    .swatches {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      width: 140px;
+    }
+
+    .swatch-block {
+      height: 88px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.15s ease;
+    }
+
+    .swatch-block:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+
+    .swatch-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #2B2D2F;
+      margin-bottom: 2px;
+    }
+
+    .swatch-hex {
+      font-size: 0.72rem;
+      color: #9A9A9A;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 4px;
+    }
+
+    .swatch-use {
+      font-size: 0.7rem;
+      color: #7A7A7A;
+      line-height: 1.4;
+    }
+
+    /* UI Preview */
+    .preview {
+      background: #FFFFFF;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .preview-logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #2E7D8C;
+    }
+
+    .preview-nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    .nav-pill {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .nav-pill.active {
+      background: #2E7D8C;
+      color: white;
+    }
+
+    .nav-pill.inactive {
+      background: #F0EEE9;
+      color: #2B2D2F;
+    }
+
+    .essay-card {
+      background: #F7F5F2;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .essay-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #2B2D2F;
+    }
+
+    .essay-text {
+      font-size: 0.78rem;
+      color: #5A5A5A;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .score-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .score-chip {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .chip-green  { background: #E6F6EE; color: #2A7A50; }
+    .chip-amber  { background: #FEF3E2; color: #A0620A; }
+    .chip-blue   { background: #E8F1F7; color: #2B5F82; }
+    .chip-red    { background: #FDECEA; color: #A02020; }
+
+    .feedback-block {
+      border-left: 3px solid #2E7D8C;
+      padding: 10px 14px;
+      background: #EFF8FA;
+      border-radius: 0 8px 8px 0;
+      margin-top: 14px;
+      font-size: 0.76rem;
+      color: #2B2D2F;
+      line-height: 1.5;
+    }
+
+    .btn-primary {
+      background: #2E7D8C;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+
+    .btn-accent {
+      background: #E07B39;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+      margin-left: 8px;
+    }
+
+    .dark-preview {
+      background: #1A2B3C;
+      border-radius: 14px;
+      padding: 28px;
+      margin-top: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+    }
+
+    .dark-preview .preview-logo { color: #5EC4D4; }
+
+    .dark-card {
+      background: #24384D;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .dark-card .essay-title { color: #EAE8E4; }
+    .dark-card .essay-text  { color: #A8B8C8; }
+
+    .dark-feedback {
+      border-left: 3px solid #5EC4D4;
+      background: #1E3347;
+      color: #C8DCE8;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 14px;
+      font-size: 0.76rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>NextGrader — Color Palette</h1>
+  <p class="subtitle">Language learning &amp; grading application · Teachers &amp; Students</p>
+
+  <!-- CORE COLORS -->
+  <section>
+    <h2>Core Colors</h2>
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#2E7D8C;"></div>
+        <div class="swatch-name">Teal Primary</div>
+        <div class="swatch-hex">#2E7D8C</div>
+        <div class="swatch-use">Nav, headers, primary buttons, links</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#E07B39;"></div>
+        <div class="swatch-name">Amber Accent</div>
+        <div class="swatch-hex">#E07B39</div>
+        <div class="swatch-use">CTAs, highlights, student motivation</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#F7F5F2;border:1px solid #E8E4DE;"></div>
+        <div class="swatch-name">Warm Off-White</div>
+        <div class="swatch-hex">#F7F5F2</div>
+        <div class="swatch-use">Page background, reduces eye strain</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#2B2D2F;"></div>
+        <div class="swatch-name">Charcoal Text</div>
+        <div class="swatch-hex">#2B2D2F</div>
+        <div class="swatch-use">Body text, labels</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#1A2B3C;"></div>
+        <div class="swatch-name">Deep Navy</div>
+        <div class="swatch-hex">#1A2B3C</div>
+        <div class="swatch-use">Dark mode background</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GRADING COLORS -->
+  <section>
+    <h2>Grading &amp; Feedback Colors</h2>
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#4CAF7D;"></div>
+        <div class="swatch-name">Positive Green</div>
+        <div class="swatch-hex">#4CAF7D</div>
+        <div class="swatch-use">Strong performance, correct answers</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#F0A500;"></div>
+        <div class="swatch-name">Caution Amber</div>
+        <div class="swatch-hex">#F0A500</div>
+        <div class="swatch-use">Needs improvement, partial credit</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#7BA7BC;"></div>
+        <div class="swatch-name">Neutral Blue</div>
+        <div class="swatch-hex">#7BA7BC</div>
+        <div class="swatch-use">Neutral comments, informational</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#D64045;"></div>
+        <div class="swatch-name">Error Red</div>
+        <div class="swatch-hex">#D64045</div>
+        <div class="swatch-use">Serious errors only — use sparingly</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#EFF8FA;border:1px solid #C8E8EE;"></div>
+        <div class="swatch-name">Feedback Tint</div>
+        <div class="swatch-hex">#EFF8FA</div>
+        <div class="swatch-use">Feedback card backgrounds</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHT MODE PREVIEW -->
+  <section>
+    <h2>Light Mode — UI Preview</h2>
+    <div class="preview">
+      <div class="preview-header">
+        <div class="preview-logo">NextGrader</div>
+        <div class="preview-nav">
+          <span class="nav-pill active">Grade</span>
+          <span class="nav-pill inactive">Practice</span>
+          <span class="nav-pill inactive">Progress</span>
+        </div>
+      </div>
+
+      <div class="essay-card">
+        <div class="essay-title">Student Essay — C1 Advanced · Part 1</div>
+        <div class="essay-text">
+          "Adults can influence younger people in a good way, but also in a bad way. There are various possibilities how this can happen. On the one hand, setting a good example is a quite useful way, because younger people will be able to see the adult's behaviours..."
+        </div>
+        <div class="score-row">
+          <span class="score-chip chip-green">Content · 5</span>
+          <span class="score-chip chip-blue">Comm. Achievement · 3</span>
+          <span class="score-chip chip-blue">Organisation · 3</span>
+          <span class="score-chip chip-amber">Language · 2</span>
+        </div>
+        <div class="feedback-block">
+          <strong>Language feedback:</strong> Range of vocabulary used appropriately but some awkwardness of expression at times. Some grammatical forms used with control, but errors occur when more complex forms are attempted. Errors do not impede communication.
+        </div>
+      </div>
+
+      <button class="btn-primary">Save Assessment</button>
+      <button class="btn-accent">Next Essay →</button>
+    </div>
+  </section>
+
+  <!-- DARK MODE PREVIEW -->
+  <section>
+    <h2>Dark Mode — UI Preview</h2>
+    <div class="dark-preview">
+      <div class="preview-header">
+        <div class="preview-logo">NextGrader</div>
+        <div class="preview-nav">
+          <span class="nav-pill active" style="background:#2E7D8C;">Grade</span>
+          <span class="nav-pill inactive" style="background:#24384D;color:#A8B8C8;">Practice</span>
+          <span class="nav-pill inactive" style="background:#24384D;color:#A8B8C8;">Progress</span>
+        </div>
+      </div>
+
+      <div class="dark-card">
+        <div class="essay-title">Student Essay — C1 Advanced · Part 1</div>
+        <div class="essay-text">
+          "Adults can influence younger people in a good way, but also in a bad way. There are various possibilities how this can happen. On the one hand, setting a good example is a quite useful way, because younger people will be able to see the adult's behaviours..."
+        </div>
+        <div class="score-row">
+          <span class="score-chip chip-green">Content · 5</span>
+          <span class="score-chip chip-blue">Comm. Achievement · 3</span>
+          <span class="score-chip chip-blue">Organisation · 3</span>
+          <span class="score-chip chip-amber">Language · 2</span>
+        </div>
+        <div class="dark-feedback">
+          <strong>Language feedback:</strong> Range of vocabulary used appropriately but some awkwardness of expression at times. Some grammatical forms used with control, but errors occur when more complex forms are attempted. Errors do not impede communication.
+        </div>
+      </div>
+
+      <button class="btn-primary">Save Assessment</button>
+      <button class="btn-accent">Next Essay →</button>
+    </div>
+  </section>
+
+</body>
+</html>

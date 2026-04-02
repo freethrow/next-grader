@@ -6,13 +6,8 @@ import Link from 'next/link'
 import PageHeader from '@/components/layout/PageHeader'
 import EssayList from '@/components/essays/EssayList'
 import EssayFilters from '@/components/essays/EssayFilters'
-import Badge from '@/components/ui/Badge'
-import Button from '@/components/ui/Button'
-import Modal from '@/components/ui/Modal'
-import Input from '@/components/ui/Input'
-import Select from '@/components/ui/Select'
 import { LEVELS } from '@/data/levels'
-import { formatDate, calculateTotalScore } from '@/lib/utils'
+import { formatDate } from '@/lib/utils'
 
 const LEVEL_OPTIONS = Object.entries(LEVELS).map(([v, { label }]) => ({ value: v, label }))
 
@@ -78,10 +73,9 @@ export default function StudentPage({ params }) {
       <PageHeader
         title={data.name}
         subtitle={`${LEVELS[data.level]?.label ?? data.level?.toUpperCase()} · Added ${formatDate(data.created_at)}`}
-        action={<Button variant="outline" size="sm" onClick={() => setEditing(true)}>Edit</Button>}
+        action={<button className="btn btn-outline btn-sm" onClick={() => setEditing(true)}>Edit</button>}
       />
 
-      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
           { label: 'Essays graded', value: essays.length },
@@ -98,7 +92,6 @@ export default function StudentPage({ params }) {
         ))}
       </div>
 
-      {/* Filters + essays */}
       <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <h2 className="font-semibold">Essays ({filteredEssays.length})</h2>
         <EssayFilters filters={filters} onChange={setFilters} />
@@ -107,22 +100,43 @@ export default function StudentPage({ params }) {
       <EssayList essays={filteredEssays} />
 
       <div className="mt-4">
-        <Link href={`/grade`} className="btn btn-primary btn-sm">+ Grade new essay</Link>
+        <Link href="/grade" className="btn btn-primary btn-sm">+ Grade new essay</Link>
       </div>
 
-      {/* Edit modal */}
-      <Modal open={editing} onClose={() => setEditing(false)} title="Edit Student">
-        <form onSubmit={handleSave} className="space-y-4">
-          <Input label="Name" value={editForm.name || ''} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} required />
-          <Input label="Email" type="email" value={editForm.email || ''} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} />
-          <Input label="Notes" value={editForm.notes || ''} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} />
-          <Select label="Level" options={LEVEL_OPTIONS} value={editForm.level || 'c2'} onChange={(e) => setEditForm({ ...editForm, level: e.target.value })} />
-          <div className="flex gap-2 justify-end pt-2">
-            <Button type="button" variant="ghost" onClick={() => setEditing(false)}>Cancel</Button>
-            <Button type="submit" loading={saving}>Save Changes</Button>
-          </div>
-        </form>
-      </Modal>
+      <dialog className={`modal ${editing ? 'modal-open' : ''}`}>
+        <div className="modal-box max-w-md">
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" type="button" onClick={() => setEditing(false)}>✕</button>
+          <h3 className="font-bold text-lg mb-4 pr-8">Edit Student</h3>
+          <form onSubmit={handleSave} className="space-y-4">
+            <div className="form-control w-full">
+              <label className="label"><span className="label-text font-medium">Name</span></label>
+              <input type="text" className="input input-bordered w-full" required value={editForm.name || ''} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
+            </div>
+            <div className="form-control w-full">
+              <label className="label"><span className="label-text font-medium">Email</span></label>
+              <input type="email" className="input input-bordered w-full" value={editForm.email || ''} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} />
+            </div>
+            <div className="form-control w-full">
+              <label className="label"><span className="label-text font-medium">Notes</span></label>
+              <input type="text" className="input input-bordered w-full" value={editForm.notes || ''} onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })} />
+            </div>
+            <div className="form-control w-full">
+              <label className="label"><span className="label-text font-medium">Level</span></label>
+              <select className="select select-bordered w-full" value={editForm.level || 'c2'} onChange={(e) => setEditForm({ ...editForm, level: e.target.value })}>
+                {LEVEL_OPTIONS.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
+              </select>
+            </div>
+            <div className="flex gap-2 justify-end pt-2">
+              <button type="button" className="btn btn-ghost" onClick={() => setEditing(false)}>Cancel</button>
+              <button type="submit" className="btn btn-primary" disabled={saving}>
+                {saving && <span className="loading loading-spinner loading-sm" />}
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+        <div className="modal-backdrop" onClick={() => setEditing(false)} />
+      </dialog>
     </div>
   )
 }

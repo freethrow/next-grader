@@ -13,34 +13,57 @@ export default async function HomePage() {
   const firstName = user?.firstName ?? null
 
   return (
-    <div className="space-y-10">
-      {/* Hero */}
-      <div className="text-center py-12">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
+    <div>
+      {/* Full-viewport video hero — breaks out of layout container */}
+      <div
+        className="relative h-screen min-h-140 flex items-center justify-center overflow-hidden -mt-8"
+        style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}
+      >
+
+        {/* Background video */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/video.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="none"
+        />
+
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-black/55" />
+
+        {/* Hero content */}
+        <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 drop-shadow-lg">
+            {firstName ? `Welcome back, ${firstName}` : 'NextGrader'}
+          </h1>
+          <p className="text-white/80 text-lg max-w-lg mx-auto mb-8 drop-shadow">
+            AI-powered Cambridge essay grading. Detailed band scores, examiner commentary, and actionable feedback — in seconds.
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            {user ? (
+              <>
+                <Link href="/grade" className="btn btn-primary btn-lg">Grade an Essay</Link>
+                <Link href="/students" className="btn btn-outline btn-lg text-white border-white hover:bg-white hover:text-black">View Students</Link>
+              </>
+            ) : (
+              <Link href="/sign-in" className="btn btn-primary btn-lg">Get Started</Link>
+            )}
+          </div>
         </div>
-        <h1 className="text-3xl font-bold mb-2">
-          {firstName ? `Welcome back, ${firstName}` : 'Welcome to NextGrader'}
-        </h1>
-        <p className="text-base-content/60 max-w-md mx-auto">
-          AI-powered Cambridge essay grading. Detailed band scores, examiner commentary, and actionable feedback — in seconds.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3 justify-center">
-          {user ? (
-            <>
-              <Link href="/grade" className="btn btn-primary btn-lg">Grade an Essay</Link>
-              <Link href="/students" className="btn btn-outline btn-lg">View Students</Link>
-            </>
-          ) : (
-            <Link href="/sign-in" className="btn btn-primary btn-lg">Get Started</Link>
-          )}
+
+        {/* Scroll cue */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 animate-bounce">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
       </div>
 
       {/* Features */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-16">
         {[
           {
             icon: '🎯',

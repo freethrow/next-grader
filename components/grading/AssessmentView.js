@@ -19,9 +19,7 @@ export default function AssessmentView({ essay }) {
             </p>
           )}
           {assessment.cefr_indication && (
-            <p className="text-base-content/60 text-sm mt-1">
-              CEFR indication: <span className="font-semibold text-primary">{assessment.cefr_indication}</span>
-            </p>
+            <p className="text-sm font-semibold text-primary mt-1">{assessment.cefr_indication}</p>
           )}
         </div>
         {essay._id && (

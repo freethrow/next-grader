@@ -1,10 +1,5 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
-import Button from '@/components/ui/Button'
-import Select from '@/components/ui/Select'
-import Input from '@/components/ui/Input'
-import Textarea from '@/components/ui/Textarea'
-import Modal from '@/components/ui/Modal'
 import AssessmentView from './AssessmentView'
 import { LEVELS } from '@/data/levels'
 
@@ -17,6 +12,7 @@ export default function GradeForm({ defaultModel, defaultLevel }) {
   const [taskType, setTaskType] = useState('')
   const [taskPrompt, setTaskPrompt] = useState('')
   const [essayText, setEssayText] = useState('')
+  const [wordCount, setWordCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [result, setResult] = useState(null)
@@ -30,6 +26,12 @@ export default function GradeForm({ defaultModel, defaultLevel }) {
   const taskTypeOptions = (levelConfig?.taskTypes ?? []).map((t) => ({ value: t, label: t.charAt(0).toUpperCase() + t.slice(1) }))
   const wordCountRange = taskType ? levelConfig?.wordCounts?.[taskType] : null
 
+  let wordCountColor = 'text-base-content/50'
+  if (wordCountRange) {
+    if (wordCount < wordCountRange.min || wordCount > wordCountRange.max) wordCountColor = 'text-warning'
+    else wordCountColor = 'text-success'
+  }
+
   useEffect(() => {
     fetch('/api/students')
       .then((r) => r.json())
@@ -42,23 +44,14 @@ export default function GradeForm({ defaultModel, defaultLevel }) {
   async function handleSubmit(e) {
     e.preventDefault()
     if (!studentId || !level || !taskType || !essayText.trim()) return
-
     setLoading(true)
     setError('')
     setResult(null)
-
     try {
       const res = await fetch('/api/grade', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          student_id: studentId,
-          level,
-          task_type: taskType,
-          task_prompt: taskPrompt,
-          essay_text: essayText,
-          model: defaultModel,
-        }),
+        body: JSON.stringify({ student_id: studentId, level, task_type: taskType, task_prompt: taskPrompt, essay_text: essayText, model: defaultModel }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Grading failed')
@@ -94,7 +87,6 @@ export default function GradeForm({ defaultModel, defaultLevel }) {
     }
   }
 
-  const studentOptions = students.map((s) => ({ value: s._id, label: s.name }))
   const canSubmit = studentId && level && taskType && essayText.trim()
 
   return (
@@ -103,68 +95,93 @@ export default function GradeForm({ defaultModel, defaultLevel }) {
 
         {/* Student */}
         <div className="flex gap-2 items-end">
-          <Select
-            label="Student"
-            options={studentOptions}
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-            placeholder="Select a student..."
-            className="flex-1"
-          />
-          <Button type="button" variant="outline" size="sm" onClick={() => setShowNewStudent(true)} className="mb-0.5">
+          <div className="form-control w-full">
+            <label className="label"><span className="label-text font-medium">Student</span></label>
+            <select
+              className="select select-bordered w-full"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+            >
+              <option value="">Select a student…</option>
+              {students.map((s) => (
+                <option key={s._id} value={s._id}>{s.name}</option>
+              ))}
+            </select>
+          </div>
+          <button type="button" className="btn btn-outline btn-sm mb-0.5" onClick={() => setShowNewStudent(true)}>
             + New
-          </Button>
+          </button>
         </div>
 
         {/* Level + Task Type */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Select
-            label="Exam Level"
-            options={LEVEL_OPTIONS}
-            value={level}
-            onChange={(e) => setLevel(e.target.value)}
-          />
-          <Select
-            label="Task Type"
-            options={taskTypeOptions}
-            value={taskType}
-            onChange={(e) => setTaskType(e.target.value)}
-            placeholder="Select task type..."
-            disabled={!level}
-          />
+          <div className="form-control w-full">
+            <label className="label"><span className="label-text font-medium">Exam Level</span></label>
+            <select className="select select-bordered w-full" value={level} onChange={(e) => setLevel(e.target.value)}>
+              {LEVEL_OPTIONS.map(({ value, label }) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-control w-full">
+            <label className="label"><span className="label-text font-medium">Task Type</span></label>
+            <select
+              className="select select-bordered w-full"
+              value={taskType}
+              onChange={(e) => setTaskType(e.target.value)}
+              disabled={!level}
+            >
+              <option value="">Select task type…</option>
+              {taskTypeOptions.map(({ value, label }) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Task prompt */}
-        <Input
-          label="Task Prompt (optional)"
-          placeholder="Paste the exam task prompt here..."
-          value={taskPrompt}
-          onChange={(e) => setTaskPrompt(e.target.value)}
-        />
+        <div className="form-control w-full">
+          <label className="label"><span className="label-text font-medium">Task Prompt (optional)</span></label>
+          <input
+            type="text"
+            className="input input-bordered w-full"
+            placeholder="Paste the exam task prompt here…"
+            value={taskPrompt}
+            onChange={(e) => setTaskPrompt(e.target.value)}
+          />
+        </div>
 
         {/* Essay text */}
-        <Textarea
-          label="Student Essay"
-          placeholder="Paste the student's essay here..."
-          value={essayText}
-          onChange={(e) => setEssayText(e.target.value)}
-          showWordCount
-          wordCountRange={wordCountRange}
-          rows={16}
-        />
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text font-medium">Student Essay</span>
+            <span className={`label-text-alt font-mono ${wordCountColor}`}>
+              {wordCount} words
+              {wordCountRange && ` · target ${wordCountRange.min}–${wordCountRange.max}`}
+            </span>
+          </label>
+          <textarea
+            className="textarea textarea-bordered w-full resize-y min-h-64"
+            placeholder="Paste the student's essay here…"
+            rows={16}
+            value={essayText}
+            onChange={(e) => {
+              setEssayText(e.target.value)
+              setWordCount(e.target.value.trim().split(/\s+/).filter(Boolean).length)
+            }}
+          />
+        </div>
 
         {error && <div className="alert alert-error text-sm">{error}</div>}
 
-        <Button
+        <button
           type="submit"
-          variant="primary"
-          size="lg"
-          loading={loading}
-          disabled={!canSubmit}
-          className="w-full"
+          className="btn btn-primary btn-lg w-full"
+          disabled={!canSubmit || loading}
         >
+          {loading && <span className="loading loading-spinner loading-sm" />}
           {loading ? 'Grading Essay…' : 'Grade Essay'}
-        </Button>
+        </button>
       </form>
 
       {result && (
@@ -173,27 +190,42 @@ export default function GradeForm({ defaultModel, defaultLevel }) {
         </div>
       )}
 
-      <Modal open={showNewStudent} onClose={() => setShowNewStudent(false)} title="Add New Student">
-        <form onSubmit={handleCreateStudent} className="space-y-4">
-          <Input
-            label="Name"
-            value={newStudentName}
-            onChange={(e) => setNewStudentName(e.target.value)}
-            placeholder="Student's full name"
-            required
-          />
-          <Select
-            label="Target Level"
-            options={LEVEL_OPTIONS}
-            value={newStudentLevel}
-            onChange={(e) => setNewStudentLevel(e.target.value)}
-          />
-          <div className="flex gap-2 justify-end pt-2">
-            <Button type="button" variant="ghost" onClick={() => setShowNewStudent(false)}>Cancel</Button>
-            <Button type="submit" loading={creatingStudent}>Create Student</Button>
-          </div>
-        </form>
-      </Modal>
+      {/* New student modal */}
+      <dialog className={`modal ${showNewStudent ? 'modal-open' : ''}`}>
+        <div className="modal-box max-w-md">
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" type="button" onClick={() => setShowNewStudent(false)}>✕</button>
+          <h3 className="font-bold text-lg mb-4 pr-8">Add New Student</h3>
+          <form onSubmit={handleCreateStudent} className="space-y-4">
+            <div className="form-control w-full">
+              <label className="label"><span className="label-text font-medium">Name</span></label>
+              <input
+                type="text"
+                className="input input-bordered w-full"
+                placeholder="Student's full name"
+                value={newStudentName}
+                onChange={(e) => setNewStudentName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-control w-full">
+              <label className="label"><span className="label-text font-medium">Target Level</span></label>
+              <select className="select select-bordered w-full" value={newStudentLevel} onChange={(e) => setNewStudentLevel(e.target.value)}>
+                {LEVEL_OPTIONS.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex gap-2 justify-end pt-2">
+              <button type="button" className="btn btn-ghost" onClick={() => setShowNewStudent(false)}>Cancel</button>
+              <button type="submit" className="btn btn-primary" disabled={creatingStudent}>
+                {creatingStudent && <span className="loading loading-spinner loading-sm" />}
+                Create Student
+              </button>
+            </div>
+          </form>
+        </div>
+        <div className="modal-backdrop" onClick={() => setShowNewStudent(false)} />
+      </dialog>
     </div>
   )
 }

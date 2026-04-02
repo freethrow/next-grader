@@ -15,20 +15,27 @@ export async function POST(request) {
     return Response.json({ error: 'Missing required fields: student_id, level, task_type, essay_text' }, { status: 400 })
   }
 
-  // Verify student belongs to this teacher
-  const { students, essays } = await getCollections()
+  // Verify student belongs to this teacher + load user's preferred model
+  const { students, essays, users } = await getCollections()
   let studentObjectId
   try { studentObjectId = new ObjectId(student_id) } catch {
     return Response.json({ error: 'Invalid student_id' }, { status: 400 })
   }
 
-  const student = await students.findOne({ _id: studentObjectId, teacher_id: userId })
+  const [student, userDoc] = await Promise.all([
+    students.findOne({ _id: studentObjectId, teacher_id: userId }),
+    users.findOne({ _id: userId }),
+  ])
   if (!student) return Response.json({ error: 'Student not found' }, { status: 404 })
+
+  const storedModel = userDoc?.preferences?.default_model ?? ''
+  // Only use stored model if it looks like an OpenRouter ID (contains a slash)
+  const model = storedModel.includes('/') ? storedModel : 'google/gemini-flash-3'
 
   // Call AI
   let assessment, rawResponse
   try {
-    const result = await gradeEssay({ essayText: essay_text, level, taskType: task_type, taskPrompt: task_prompt })
+    const result = await gradeEssay({ essayText: essay_text, level, taskType: task_type, taskPrompt: task_prompt, model })
     assessment = result.assessment
     rawResponse = result.rawResponse
   } catch (err) {
@@ -45,7 +52,7 @@ export async function POST(request) {
     task_prompt: task_prompt || '',
     essay_text,
     word_count: countWords(essay_text),
-    model: 'google/gemini-flash-3',
+    model,
     assessment,
     raw_response: rawResponse,
     created_at: now,

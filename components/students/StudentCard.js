@@ -1,5 +1,4 @@
 import { useRouter } from 'next/navigation'
-import Badge from '@/components/ui/Badge'
 import { LEVELS } from '@/data/levels'
 
 export default function StudentCard({ student }) {
@@ -14,14 +13,10 @@ export default function StudentCard({ student }) {
       <div className="card-body p-5">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-semibold text-base leading-tight">{student.name}</h3>
-          <Badge variant="level">{levelLabel}</Badge>
+          <span className="badge badge-primary badge-sm font-semibold">{levelLabel}</span>
         </div>
-        {student.email && (
-          <p className="text-sm text-base-content/50">{student.email}</p>
-        )}
-        {student.notes && (
-          <p className="text-sm text-base-content/60 line-clamp-2">{student.notes}</p>
-        )}
+        {student.email && <p className="text-sm text-base-content/50">{student.email}</p>}
+        {student.notes && <p className="text-sm text-base-content/60 line-clamp-2">{student.notes}</p>}
         <div className="flex items-center gap-4 mt-2 text-xs text-base-content/50">
           <span>{student.essayCount ?? 0} essays</span>
           {student.avgScore != null && (

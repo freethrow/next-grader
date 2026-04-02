@@ -1,7 +1,13 @@
-import Badge from '@/components/ui/Badge'
 import { capitalize } from '@/lib/utils'
 
 const SUBSCALES = ['content', 'communicative_achievement', 'organisation', 'language']
+
+function scoreBadgeClass(score) {
+  if (score <= 1) return 'text-error'
+  if (score === 2) return 'text-warning'
+  if (score === 3) return 'text-success'
+  return 'text-accent'
+}
 
 export default function BandScoreTable({ scores }) {
   if (!scores) return null
@@ -23,7 +29,7 @@ export default function BandScoreTable({ scores }) {
               <tr key={key}>
                 <td className="font-medium">{capitalize(key)}</td>
                 <td className="text-center">
-                  <Badge variant="score" score={score}>{score}</Badge>
+                  <div className={`inline-flex items-center justify-center w-8 h-8 font-bold text-sm ${scoreBadgeClass(score)}`}>{score}</div>
                 </td>
                 <td>
                   <div className="flex gap-1 justify-center">

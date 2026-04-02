@@ -1,6 +1,12 @@
 import Link from 'next/link'
-import Badge from '@/components/ui/Badge'
 import { formatDate, capitalize } from '@/lib/utils'
+
+function scoreBadgeClass(score) {
+  if (score <= 5) return 'badge-error'
+  if (score <= 10) return 'badge-warning'
+  if (score <= 15) return 'badge-success'
+  return 'badge-accent'
+}
 
 export default function EssayCard({ essay }) {
   const scores = essay.assessment?.scores
@@ -13,13 +19,13 @@ export default function EssayCard({ essay }) {
         <div className="card-body p-5">
           <div className="flex items-start justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant="level">{essay.level?.toUpperCase()}</Badge>
-              <Badge variant="task">{capitalize(essay.task_type)}</Badge>
+              <span className="badge badge-primary badge-sm font-semibold">{essay.level?.toUpperCase()}</span>
+              <span className="badge badge-secondary badge-sm font-semibold">{capitalize(essay.task_type)}</span>
             </div>
             {scores && (
-              <Badge variant="score" score={Math.round(scores.total / 4)}>
+              <span className={`badge badge-sm font-semibold ${scoreBadgeClass(scores.total)}`}>
                 {scores.total}/20
-              </Badge>
+              </span>
             )}
           </div>
           {title ? (

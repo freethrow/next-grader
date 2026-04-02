@@ -5,8 +5,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import BandScoreTable from '@/components/grading/BandScoreTable'
 import FeedbackSection from '@/components/grading/FeedbackSection'
-import Badge from '@/components/ui/Badge'
-import Button from '@/components/ui/Button'
 import { formatDate, capitalize } from '@/lib/utils'
 
 export default function EssayPage({ params }) {
@@ -38,37 +36,35 @@ export default function EssayPage({ params }) {
 
   return (
     <div className="max-w-5xl mx-auto">
-      {/* Breadcrumb */}
       <div className="mb-2 text-sm text-base-content/50 flex items-center gap-1 flex-wrap">
         <Link href="/students" className="hover:text-primary">Students</Link>
         {student && <>/ <Link href={`/students/${student._id}`} className="hover:text-primary">{student.name}</Link></>}
         / Essay
       </div>
 
-      {/* Title */}
       {assessment?.inferred_title && (
         <h1 className="text-xl font-semibold italic text-base-content/80 mb-3">
           &ldquo;{assessment.inferred_title}&rdquo;
         </h1>
       )}
 
-      {/* Meta bar */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
-        <Badge variant="level">{essay.level?.toUpperCase()}</Badge>
-        <Badge variant="task">{capitalize(essay.task_type)}</Badge>
+        <span className="badge badge-primary badge-sm font-semibold">{essay.level?.toUpperCase()}</span>
+        <span className="badge badge-secondary badge-sm font-semibold">{capitalize(essay.task_type)}</span>
         <span className="text-sm text-base-content/50">{formatDate(essay.created_at)}</span>
         <span className="text-sm text-base-content/50">{essay.word_count} words</span>
         <span className="text-sm text-base-content/50 hidden sm:inline">Model: {essay.model}</span>
         <div className="ml-auto flex gap-2 print:hidden">
-          <Button variant="ghost" size="sm" onClick={() => window.print()}>Print</Button>
-          <Link href={`/grade`} className="btn btn-outline btn-sm">Re-grade</Link>
-          <Button variant="danger" size="sm" loading={deleting} onClick={handleDelete}>Delete</Button>
+          <button className="btn btn-ghost btn-sm" onClick={() => window.print()}>Print</button>
+          <Link href="/grade" className="btn btn-outline btn-sm">Re-grade</Link>
+          <button className="btn btn-error btn-sm" disabled={deleting} onClick={handleDelete}>
+            {deleting && <span className="loading loading-spinner loading-sm" />}
+            Delete
+          </button>
         </div>
       </div>
 
-      {/* Two-column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Essay text */}
         <div>
           <h2 className="font-semibold mb-3">Essay</h2>
           {essay.task_prompt && (
@@ -82,14 +78,12 @@ export default function EssayPage({ params }) {
           </div>
         </div>
 
-        {/* Assessment panel */}
         <div className="space-y-6">
-          {/* Scores */}
           <div>
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-semibold">Band Scores</h2>
               {assessment?.cefr_indication && (
-                <span className="badge badge-primary">{assessment.cefr_indication}</span>
+                <p className="text-sm font-semibold text-primary">{assessment.cefr_indication}</p>
               )}
             </div>
             <div className="card bg-base-100 border border-base-200 shadow-sm">
@@ -99,7 +93,6 @@ export default function EssayPage({ params }) {
             </div>
           </div>
 
-          {/* Feedback */}
           <div>
             <h2 className="font-semibold mb-3">Feedback</h2>
             <div className="card bg-base-100 border border-base-200 shadow-sm">
