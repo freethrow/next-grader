@@ -3,7 +3,7 @@ import { getCollections } from '@/lib/db'
 import GradeForm from '@/components/grading/GradeForm'
 import PageHeader from '@/components/layout/PageHeader'
 
-export const metadata = { title: 'Grade Essay — NextGrader' }
+export const metadata = { title: 'Grade Essay — Verbiq' }
 
 export default async function GradePage() {
   const { userId } = await auth()

@@ -1,35 +1,40 @@
 @import "tailwindcss";
 
-@plugin "daisyui" {
-  themes: all;
+@theme {
+  --color-primary:      #2E7D8C;
+  --color-primary-tint: #EFF8FA;
+  --color-accent:       #E07B39;
+  --color-canvas:       #F7F5F2;
+  --color-surface:      #FFFFFF;
+  --color-raised:       #F0EEE9;
+  --color-border:       #E8E4DE;
+  --color-ink:          #2B2D2F;
+  --color-muted:        #7A7A7A;
+  --color-faint:        #9A9A9A;
+  --color-navy:         #1A2B3C;
+  --color-green:        #4CAF7D;
+  --color-green-light:  #E6F6EE;
+  --color-amber:        #F0A500;
+  --color-amber-light:  #FEF3E2;
+  --color-sky:          #7BA7BC;
+  --color-sky-light:    #E8F1F7;
+  --color-red:          #D64045;
+  --color-red-light:    #FDECEA;
 }
 
 body {
   font-family: system-ui, -apple-system, sans-serif;
+  background-color: #F7F5F2;
+  color: #2B2D2F;
   overflow-x: hidden;
 }
 
-/* Print styles — essay assessment page */
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
 @media print {
-
-  nav,
-  footer,
-  .print\:hidden {
-    display: none !important;
-  }
-
-  main {
-    max-width: 100% !important;
-    padding: 0 !important;
-  }
-
-  .lg\:grid-cols-2 {
-    grid-template-columns: 1fr !important;
-  }
-
-  .card {
-    box-shadow: none !important;
-    border: 1px solid #e5e7eb !important;
-    break-inside: avoid;
-  }
+  nav, footer, .print-hidden { display: none !important; }
+  main { max-width: 100% !important; padding: 0 !important; }
+  .card { box-shadow: none !important; border: 1px solid #E8E4DE !important; break-inside: avoid; }
 }

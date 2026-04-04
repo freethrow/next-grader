@@ -4,17 +4,15 @@ import Link from 'next/link'
 
 export default function AssessmentView({ essay }) {
   if (!essay?.assessment) return null
-
   const { assessment } = essay
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-xl font-bold">Assessment Result</h2>
+          <h2 className="text-xl font-bold text-ink">Assessment Result</h2>
           {assessment.inferred_title && (
-            <p className="text-base font-medium text-base-content/80 mt-0.5 italic">
+            <p className="text-base font-medium text-muted mt-0.5 italic">
               &ldquo;{assessment.inferred_title}&rdquo;
             </p>
           )}
@@ -23,25 +21,19 @@ export default function AssessmentView({ essay }) {
           )}
         </div>
         {essay._id && (
-          <Link href={`/essays/${essay._id}`} className="btn btn-outline btn-sm shrink-0">
+          <Link href={`/essays/${essay._id}`} className="shrink-0 px-4 py-2 rounded-lg border border-border text-sm font-medium text-ink hover:bg-raised transition-colors">
             View Full Assessment →
           </Link>
         )}
       </div>
 
-      {/* Band scores */}
-      <div className="card bg-base-100 border border-base-200 shadow-sm">
-        <div className="card-body p-5">
-          <h3 className="font-semibold mb-3">Band Scores</h3>
-          <BandScoreTable scores={assessment.scores} />
-        </div>
+      <div className="bg-surface border border-border rounded-xl shadow-sm p-5">
+        <h3 className="font-semibold text-ink mb-3">Band Scores</h3>
+        <BandScoreTable scores={assessment.scores} />
       </div>
 
-      {/* Feedback */}
-      <div className="card bg-base-100 border border-base-200 shadow-sm">
-        <div className="card-body p-5">
-          <FeedbackSection assessment={assessment} />
-        </div>
+      <div className="bg-surface border border-border rounded-xl shadow-sm p-5">
+        <FeedbackSection assessment={assessment} />
       </div>
     </div>
   )

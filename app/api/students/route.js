@@ -10,9 +10,10 @@ export async function GET(request) {
 
   const { students } = await getCollections()
 
-  let query = { teacher_id: userId }
+  const query = { teacher_id: userId }
   if (search) {
-    query.$text = { $search: search }
+    const re = { $regex: search, $options: 'i' }
+    query.$or = [{ name: re }, { email: re }, { notes: re }]
   }
 
   const list = await students

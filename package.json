@@ -1,5 +1,5 @@
 {
-  "name": "nextgrader",
+  "name": "verbiq",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,6 @@
     "@ai-sdk/openai-compatible": "^2.0.37",
     "@clerk/nextjs": "^7.0.7",
     "ai": "^6.0.142",
-    "daisyui": "^5.5.19",
     "mongodb": "^7.1.1",
     "next": "16.2.1",
     "react": "19.2.4",

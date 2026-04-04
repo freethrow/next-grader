@@ -10,30 +10,30 @@ export default function FeedbackSection({ assessment }) {
     <div className="space-y-6">
       {/* Examiner commentary */}
       <div>
-        <h3 className="font-semibold text-base mb-3">Examiner Commentary</h3>
+        <h3 className="font-semibold text-ink mb-3">Examiner Commentary</h3>
         <div className="space-y-3">
-          {SUBSCALES.map((key) => (
+          {SUBSCALES.map((key) =>
             commentary?.[key] ? (
-              <div key={key} className="bg-base-200 rounded-lg p-4">
-                <p className="text-xs font-semibold text-base-content/50 uppercase tracking-wide mb-1">
+              <div key={key} className="border-l-3 border-primary pl-3 bg-primary-tint rounded-r-lg py-3 pr-3">
+                <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-1">
                   {capitalize(key)}
                 </p>
-                <p className="text-sm text-base-content/80 leading-relaxed">{commentary[key]}</p>
+                <p className="text-sm text-ink leading-relaxed">{commentary[key]}</p>
               </div>
             ) : null
-          ))}
+          )}
         </div>
       </div>
 
       {/* Strengths */}
       {strengths?.length > 0 && (
         <div>
-          <h3 className="font-semibold text-base mb-2 text-success">Strengths</h3>
+          <h3 className="font-semibold text-green mb-2">Strengths</h3>
           <ul className="space-y-1.5">
             {strengths.map((s, i) => (
               <li key={i} className="flex gap-2 text-sm">
-                <span className="text-success mt-0.5">✓</span>
-                <span>{s}</span>
+                <span className="text-green mt-0.5 shrink-0">✓</span>
+                <span className="text-ink">{s}</span>
               </li>
             ))}
           </ul>
@@ -43,12 +43,12 @@ export default function FeedbackSection({ assessment }) {
       {/* Areas for development */}
       {areas_for_development?.length > 0 && (
         <div>
-          <h3 className="font-semibold text-base mb-2 text-warning">Areas for Development</h3>
+          <h3 className="font-semibold text-amber mb-2">Areas for Development</h3>
           <ul className="space-y-1.5">
             {areas_for_development.map((a, i) => (
               <li key={i} className="flex gap-2 text-sm">
-                <span className="text-warning mt-0.5">→</span>
-                <span>{a}</span>
+                <span className="text-amber mt-0.5 shrink-0">→</span>
+                <span className="text-ink">{a}</span>
               </li>
             ))}
           </ul>
@@ -58,20 +58,20 @@ export default function FeedbackSection({ assessment }) {
       {/* Key errors */}
       {key_errors && Object.keys(key_errors).length > 0 && (
         <div>
-          <h3 className="font-semibold text-base mb-2 text-error">Key Errors</h3>
-          <div className="space-y-2">
+          <h3 className="font-semibold text-red mb-2">Key Errors</h3>
+          <div className="space-y-3">
             {Object.entries(key_errors).map(([category, examples]) => (
               <div key={category}>
-                <p className="text-xs font-semibold text-base-content/50 uppercase tracking-wide mb-1">
+                <p className="text-xs font-semibold text-muted uppercase tracking-wide mb-1.5">
                   {capitalize(category)}
                 </p>
-                <ul className="space-y-1">
+                <div className="flex flex-wrap gap-1.5">
                   {examples.map((ex, i) => (
-                    <li key={i} className="text-sm font-mono bg-error/10 text-error rounded px-2 py-0.5 inline-block mr-2">
+                    <span key={i} className="text-xs font-mono bg-red-light text-red rounded px-2 py-0.5">
                       {ex}
-                    </li>
+                    </span>
                   ))}
-                </ul>
+                </div>
               </div>
             ))}
           </div>

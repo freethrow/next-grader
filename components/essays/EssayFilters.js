@@ -13,7 +13,7 @@ export default function EssayFilters({ filters, onChange }) {
   return (
     <div className="flex flex-wrap gap-2 items-center">
       <select
-        className="select select-sm select-bordered"
+        className="text-sm border border-border rounded-lg px-3 py-1.5 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
         value={filters.level || ''}
         onChange={(e) => update('level', e.target.value)}
       >
@@ -23,7 +23,7 @@ export default function EssayFilters({ filters, onChange }) {
         ))}
       </select>
       <select
-        className="select select-sm select-bordered"
+        className="text-sm border border-border rounded-lg px-3 py-1.5 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
         value={filters.task_type || ''}
         onChange={(e) => update('task_type', e.target.value)}
       >
