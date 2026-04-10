@@ -10,8 +10,6 @@ export default async function HomePage() {
     if (userId) user = await currentUser()
   } catch { }
 
-  const firstName = user?.firstName ?? null
-
   return (
     <div>
       {/* Full-viewport video hero */}
@@ -32,7 +30,7 @@ export default async function HomePage() {
         <div className="absolute inset-0" style={{ background: 'rgba(26,43,60,0.45)' }} />
         <div className="relative z-10 text-center px-6 max-w-2xl mx-auto border-2 border-white/20 rounded-3xl py-10 backdrop-blur-sm">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 drop-shadow-lg">
-            {firstName ? `Welcome back, ${firstName}` : 'Verbiq'}
+            Verbiq
           </h1>
           <p className="text-white/80 text-lg max-w-lg mx-auto mb-8 drop-shadow">
             AI-powered Cambridge essay grading. Detailed band scores, examiner commentary, and actionable feedback — in seconds.

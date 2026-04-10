@@ -166,10 +166,10 @@ export default function GradeForm({ defaultModel, defaultLevel }) {
             <label className={labelCls}>
               Task Prompt <span className="normal-case font-normal text-faint tracking-normal">(optional)</span>
             </label>
-            <input
-              type="text"
-              className={inputCls}
+            <textarea
+              className={`${inputCls} resize-y min-h-20`}
               placeholder="Paste the exam task prompt here…"
+              rows={3}
               value={taskPrompt}
               onChange={e => setTaskPrompt(e.target.value)}
             />
