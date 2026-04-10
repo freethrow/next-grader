@@ -34,7 +34,7 @@ export async function PUT(request) {
     default_model: default_model ?? 'google/gemini-flash-3',
     default_level: default_level ?? 'c2',
     custom_models: sanitizedModels,
-    max_gradings_per_day: Number.isInteger(max_gradings_per_day) && max_gradings_per_day > 0 ? max_gradings_per_day : 2,
+    max_gradings_per_day: Number.isInteger(max_gradings_per_day) && max_gradings_per_day > 0 ? max_gradings_per_day : 5,
     updated_at: new Date(),
   }
 

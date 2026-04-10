@@ -8,7 +8,7 @@ const inputCls = 'w-full px-3 py-2 rounded-lg border border-border bg-surface te
 const labelCls = 'block text-sm font-medium text-ink mb-1'
 
 export default function SettingsPage() {
-  const [prefs, setPrefs] = useState({ default_model: '', default_level: 'c2', custom_models: [], max_gradings_per_day: 2 })
+  const [prefs, setPrefs] = useState({ default_model: '', default_level: 'c2', custom_models: [], max_gradings_per_day: 5 })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -75,7 +75,7 @@ export default function SettingsPage() {
             </select>
           </div>
           <div><label className={labelCls}>Max gradings per day <span className="text-faint font-normal">(per user)</span></label>
-            <input type="number" min="1" max="100" className={inputCls} value={prefs.max_gradings_per_day} onChange={e => setPrefs({ ...prefs, max_gradings_per_day: parseInt(e.target.value) || 2 })} />
+            <input type="number" min="1" max="100" className={inputCls} value={prefs.max_gradings_per_day} onChange={e => setPrefs({ ...prefs, max_gradings_per_day: parseInt(e.target.value) || 5 })} />
           </div>
         </section>
 
