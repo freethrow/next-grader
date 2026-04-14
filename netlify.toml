@@ -10,7 +10,4 @@
 
 [functions]
   node_bundler = "nft"
-
-[[functions]]
-  path = "/api/grade"
   timeout = 30
